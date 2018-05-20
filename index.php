@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Спасибо, ты помог!</title>
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="manifest" href="favicons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="favicons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
   <style>
   /* http://meyerweb.com/eric/tools/css/reset/ 
      v2.0 | 20110126
@@ -146,6 +163,13 @@
 
     .logos {
       margin-bottom: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logos a:first-child {
+      margin-right: 60px;
     }
 
     .copyright {
@@ -195,32 +219,42 @@
   </style>
 </head>
 <body>
-  <?php $counter = file_get_contents('counter.txt') ?>
+  <?php $counter = file_get_contents('counter.txt'); ?>
   <div class="container">
 
     <h1>Спа<img src="moon.png" alt="spasibo" width="60">ибо,<br>ты помог</h1>
-    <div class="price"><span class="price-text" data-price="<?php echo empty($counter) ? '40560' : $counter ?>"><?php echo empty($counter) ? '40 560' : $counter ?></span>₽</div>
+    <div class="price"><span class="price-text" data-price="<?php echo $counter; ?>"><?php echo $counter; ?></span>₽</div>
     <p class="day-text"><span class="js-day">1</span> день с начала акции</p>
-    <img src="logos.png" alt="real2" class="logos">
+    <div class="logos">
+      <a href="http://real2.ru" target="_blank"> <img src="logo-real.png" alt="real2"> </a>
+      <a href="http://fondinsan.ru" target="_blank"> <img src="logo-insan.png" alt="real2"> </a>
+    </div>
     <p class="copyright">Спасибо. Реал два. Не является публичной офертой. Цены указаны в российских рублях. Организаторы акции: ИП "Севостьянова Екатерина Рудиеновна", ИНН 056009206016, ОГРНИП 310057019500097, Благотворительный фонд "ИНСАН", ИНН: 0572001481, ОГРН: 1120500000576 В период проведения акции с 15.05.2018 - 15.06.2018 года компания REAL2 отчисляет 20 рублей с каждой товара в чеке в благотворительный фонд "Инсан". 20 рублей с товара не отчисляется с оптовых покупок и покупок смартфонов, планшетов, умных часов и ноутбуков. 20 рублей отчисляется с покупок, совершенных в розничных магазинах REAL2 на территории РД, покупок в колл-центре по тел. 55-51-51 и на сайте www.real2.ru. Подробную информацию вы можете получить по тел.: 8 8722 55-51-51.</p>
   </div>
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
   <script>
     var priceText = document.querySelector('.price-text');
-    var price = +priceText.dataset['price'];
+    var price = priceText.dataset['price'];
     var step = 20;
-    var interval = 20;
+    var interval = 32;
     var startDate = new Date(2018, 4, 14, 9);
-    var nowDate = new Date()
+    var nowDate = new Date();
+    var twentyHours = 12 * 60 * 60 * 60;
 
     document.querySelector('.js-day').textContent = nowDate.getDate() - startDate.getDate();
 
-    setInterval(function() {
-      price += step;
-      priceText.textContent = price;
-      $.post('post.php', {price: price}, function(data) {
-      });
-    }, interval * 1000)
+    function startInterval(clear) {
+      var priceUpdater = setInterval(function() {
+        $.get('counter.txt', {}, function(data) {
+          if (data.length) {
+            priceText.textContent = data;
+          }
+        });
+      }, interval * 1000);
+    }
+
+    startInterval()
+
   </script>
 </body>
 </html>
